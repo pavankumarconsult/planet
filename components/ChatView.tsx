@@ -55,9 +55,9 @@ const ChatView: React.FC<ChatViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
+    <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
       {/* Header */}
-      <header className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 py-4 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-500 shrink-0">
+      <header className="flex items-center justify-between px-4 md:px-6 py-4 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-500 shrink-0">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold tracking-tight text-rose-500 dark:text-rose-400">Planet</h1>
           <p className="text-[10px] md:text-xs text-zinc-500 font-medium">Jupiter ❤️ Mars</p>
@@ -95,7 +95,7 @@ const ChatView: React.FC<ChatViewProps> = ({
       {/* Message Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto p-4 pb-24 space-y-4 custom-scrollbar bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-zinc-200/20 dark:from-zinc-900/40 via-transparent to-transparent min-h-0"
+        className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-zinc-200/20 dark:from-zinc-900/40 via-transparent to-transparent"
       >
         {messages.map((msg) => {
           // Determine if message is from current user
@@ -142,7 +142,7 @@ const ChatView: React.FC<ChatViewProps> = ({
       {/* Input Area */}
       <form 
         onSubmit={handleSubmit}
-        className="sticky bottom-0 p-4 pb-8 bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur-md border-t border-zinc-200 dark:border-zinc-900 shrink-0"
+        className="p-4 pb-8 bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur-md border-t border-zinc-200 dark:border-zinc-900 shrink-0"
       >
         <div className="relative flex items-center bg-white dark:bg-zinc-900 rounded-2xl p-1.5 pr-2 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <input 
