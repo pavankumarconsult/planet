@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow access only to fixed users: jupiter and mars
+    match /users/{userId} {
+      allow read, write: if userId in ['jupiter', 'mars'];
+    }
+
+    // Chats are readable and writable by both users
+    match /chats/{chatId} {
+      allow read, write: if chatId == 'jupiter_mars';
+    }
+
+    // Diaries: users can access only their own diary
+    match /diaries/{userId} {
+      allow read, write: if userId in ['jupiter', 'mars'] && request.auth.uid == userId;
+    }
+
+    // Shared notes readable and writable by both
+    match /shared_notes/{noteId} {
+      allow read, write: if noteId == 'planet_notes';
+    }
+
+    // App state writable by both
+    match /app_state/{stateId} {
+      allow write: if stateId == 'ui_state' && request.auth.uid in ['jupiter', 'mars'];
+    }
+  }
+}
