@@ -55,9 +55,9 @@ const ChatView: React.FC<ChatViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
+    <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
       {/* Header */}
-      <header className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 py-4 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-500 shrink-0">
+      <header className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-6 py-4 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 transition-colors duration-500">
         <div className="flex flex-col">
           <h1 className="text-xl font-bold tracking-tight text-rose-500 dark:text-rose-400">Planet</h1>
           <p className="text-[10px] md:text-xs text-zinc-500 font-medium">Jupiter ❤️ Mars</p>
@@ -95,33 +95,33 @@ const ChatView: React.FC<ChatViewProps> = ({
       {/* Message Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto p-4 pb-24 space-y-4 custom-scrollbar bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-zinc-200/20 dark:from-zinc-900/40 via-transparent to-transparent min-h-0"
+        className="flex-1 overflow-y-auto p-4 pb-24 space-y-4 custom-scrollbar bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-zinc-200/20 dark:from-zinc-900/40 via-transparent to-transparent"
       >
         {messages.map((msg) => {
           // Determine if message is from current user
           const isCurrentUser = currentUser && msg.sender.toLowerCase() === currentUser;
           
           return (
+          <div 
+            key={msg.id} 
+            className={`flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'}`}
+          >
             <div 
-              key={msg.id} 
-              className={`flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'}`}
+              className={`max-w-[85%] md:max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${
+                isCurrentUser
+                  ? 'bg-rose-600 text-white rounded-tr-none' 
+                  : 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-tl-none border border-zinc-200 dark:border-zinc-700'
+              }`}
             >
-              <div 
-                className={`max-w-[85%] md:max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${
-                  isCurrentUser
-                    ? 'bg-rose-600 text-white rounded-tr-none' 
-                    : 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-tl-none border border-zinc-200 dark:border-zinc-700'
-                }`}
-              >
-                {msg.text}
-              </div>
-              <span className="mt-1 text-[10px] text-zinc-400 dark:text-zinc-600 px-1">
-                {msg.timestamp instanceof Date 
-                  ? msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                  : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                }
-              </span>
+              {msg.text}
             </div>
+            <span className="mt-1 text-[10px] text-zinc-400 dark:text-zinc-600 px-1">
+              {msg.timestamp instanceof Date 
+                ? msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              }
+            </span>
+          </div>
           );
         })}
 
@@ -142,7 +142,7 @@ const ChatView: React.FC<ChatViewProps> = ({
       {/* Input Area */}
       <form 
         onSubmit={handleSubmit}
-        className="sticky bottom-0 p-4 pb-8 bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur-md border-t border-zinc-200 dark:border-zinc-900 shrink-0"
+        className="sticky bottom-0 p-4 pb-8 bg-zinc-50/80 dark:bg-zinc-950/80 backdrop-blur-md border-t border-zinc-200 dark:border-zinc-900"
       >
         <div className="relative flex items-center bg-white dark:bg-zinc-900 rounded-2xl p-1.5 pr-2 focus-within:ring-2 focus-within:ring-rose-500/20 transition-all border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <input 
