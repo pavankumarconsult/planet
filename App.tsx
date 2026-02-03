@@ -146,7 +146,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`${theme === 'dark' ? 'dark' : ''}`}>
-      <div className="flex h-screen w-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-500">
+      <div className="flex h-screen w-screen overflow-hidden overflow-x-hidden max-w-[100vw] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-500">
         {/* Main Content Area */}
         <div className={`flex flex-1 flex-col transition-all duration-300 ${showNotes ? 'md:mr-96' : ''}`}>
           <ChatView 
