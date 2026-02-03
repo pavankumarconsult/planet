@@ -1,21 +1,61 @@
 
 import React from 'react';
 import { Theme } from '../types';
-import { X, Moon, Sun, Monitor, Palette, Lock } from 'lucide-react';
+import { X, Moon, Sun, Monitor, Palette } from 'lucide-react';
 
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
   theme: Theme;
   onThemeChange: (theme: Theme) => void;
+  chatUiAdjust: {
+    top: number;
+    bottom: number;
+    horizontal: number;
+    density: 'compact' | 'comfortable';
+  };
+  onChatUiAdjustChange: (next: {
+    top: number;
+    bottom: number;
+    horizontal: number;
+    density: 'compact' | 'comfortable';
+  }) => void;
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ 
   isOpen, 
-  onClose, 
-  theme, 
-  onThemeChange 
+  onClose,
+  theme,
+  onThemeChange,
+  chatUiAdjust,
+  onChatUiAdjustChange
 }) => {
+  const clamp = (value: number, min: number, max: number) =>
+    Math.min(max, Math.max(min, value));
+
+  const handleAdjustChange = (key: 'top' | 'bottom' | 'horizontal', value: number) => {
+    onChatUiAdjustChange({
+      ...chatUiAdjust,
+      [key]: value
+    });
+  };
+
+  const handleDensityChange = (density: 'compact' | 'comfortable') => {
+    onChatUiAdjustChange({
+      ...chatUiAdjust,
+      density
+    });
+  };
+
+  const handleReset = () => {
+    onChatUiAdjustChange({
+      top: 12,
+      bottom: 16,
+      horizontal: 12,
+      density: 'comfortable'
+    });
+  };
+
   return (
     <div className={`
       fixed inset-0 z-50 transform transition-transform duration-500 ease-in-out bg-zinc-50 dark:bg-zinc-950
@@ -67,6 +107,119 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   <span className="text-xs font-bold">Dark</span>
                 </button>
               </div>
+            </div>
+          </section>
+
+          {/* Chat UI Adjustment Section */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-rose-500 dark:text-rose-400">
+              <Monitor size={18} />
+              <h3 className="text-sm font-bold uppercase tracking-wider">Chat UI Adjustment</h3>
+            </div>
+            <p className="text-xs text-zinc-500 font-medium">
+              Tune spacing so the chat stays visible on your device.
+            </p>
+
+            <div className="space-y-4">
+              {/* Top Spacing */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                    Top Spacing
+                  </span>
+                  <span className="text-xs text-zinc-500">{chatUiAdjust.top}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={32}
+                  step={1}
+                  value={chatUiAdjust.top}
+                  onChange={(e) =>
+                    handleAdjustChange('top', clamp(Number(e.target.value), 0, 32))
+                  }
+                  className="w-full accent-rose-500"
+                />
+              </div>
+
+              {/* Bottom Spacing */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                    Bottom Spacing
+                  </span>
+                  <span className="text-xs text-zinc-500">{chatUiAdjust.bottom}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={8}
+                  max={48}
+                  step={1}
+                  value={chatUiAdjust.bottom}
+                  onChange={(e) =>
+                    handleAdjustChange('bottom', clamp(Number(e.target.value), 8, 48))
+                  }
+                  className="w-full accent-rose-500"
+                />
+              </div>
+
+              {/* Left/Right Spacing */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                    Left / Right Spacing
+                  </span>
+                  <span className="text-xs text-zinc-500">{chatUiAdjust.horizontal}px</span>
+                </div>
+                <input
+                  type="range"
+                  min={8}
+                  max={24}
+                  step={1}
+                  value={chatUiAdjust.horizontal}
+                  onChange={(e) =>
+                    handleAdjustChange('horizontal', clamp(Number(e.target.value), 8, 24))
+                  }
+                  className="w-full accent-rose-500"
+                />
+              </div>
+
+              {/* Density Toggle */}
+              <div className="space-y-2">
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                  Density
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleDensityChange('compact')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${
+                      chatUiAdjust.density === 'compact'
+                        ? 'bg-rose-50 border-rose-500 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400'
+                        : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500'
+                    }`}
+                  >
+                    Compact
+                  </button>
+                  <button
+                    onClick={() => handleDensityChange('comfortable')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${
+                      chatUiAdjust.density === 'comfortable'
+                        ? 'bg-rose-50 border-rose-500 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400'
+                        : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500'
+                    }`}
+                  >
+                    Comfortable
+                  </button>
+                </div>
+              </div>
+
+              {/* Reset */}
+              <button
+                onClick={handleReset}
+                className="w-full mt-2 py-2 text-xs font-semibold rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/60"
+              >
+                Reset to Default
+              </button>
             </div>
           </section>
 

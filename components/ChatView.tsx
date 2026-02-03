@@ -55,32 +55,58 @@ const ChatView: React.FC<ChatViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full w-full max-w-full overflow-x-hidden bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex flex-col w-full max-w-full overflow-hidden bg-zinc-50 dark:bg-zinc-950">
 
       {/* HEADER */}
-      <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-4 bg-white/80 dark:bg-zinc-950/80 backdrop-blur border-b border-zinc-200 dark:border-zinc-800">
+      <header
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur border-b border-zinc-200 dark:border-zinc-800"
+        style={{
+          paddingTop: 'calc(var(--chat-padding-top) + env(safe-area-inset-top))', // User-adjustable top spacing
+          paddingLeft: 'var(--chat-padding-horizontal)', // User-adjustable side padding
+          paddingRight: 'var(--chat-padding-horizontal)' // User-adjustable side padding
+        }}
+      >
         <div>
           <h1 className="text-xl font-bold text-rose-500">Planet</h1>
           <p className="text-xs text-zinc-500">Jupiter ❤️ Mars</p>
         </div>
 
-        <div className="flex gap-2">
-          <button onClick={onToggleSettings} className="icon-btn">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSettings}
+            className="p-2 rounded-lg border-2 border-zinc-200/70 dark:border-zinc-700/80 text-zinc-500 hover:text-rose-500 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/60"
+            aria-label="Settings"
+          >
             <Settings size={20} />
           </button>
-          <button onClick={onToggleNotes} className="icon-btn">
+          <button
+            onClick={onToggleNotes}
+            className="p-2 rounded-lg border-2 border-zinc-200/70 dark:border-zinc-700/80 text-zinc-500 hover:text-rose-500 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/60"
+            aria-label="Notes"
+          >
             <Book size={20} />
           </button>
-          <button onClick={onTogglePanic} className="icon-btn text-red-500">
+          <button
+            onClick={onTogglePanic}
+            className="p-2 mr-2 rounded-lg border-2 border-zinc-200/70 dark:border-zinc-700/80 text-red-500 hover:bg-red-500/10"
+            aria-label="Panic Mode"
+          >
             <Shield size={20} />
           </button>
         </div>
       </header>
 
       {/* CHAT AREA */}
-      <div
+      <div 
         ref={scrollRef}
-        className="flex-1 min-h-0 w-full overflow-y-auto overflow-x-hidden px-4 py-4 space-y-4"
+        className="flex-1 min-h-0 w-full overflow-y-auto overflow-x-hidden"
+        style={{
+          paddingTop: 'calc(72px + var(--chat-padding-top) + env(safe-area-inset-top))', // Push chat below fixed header
+          paddingBottom: 'calc(96px + var(--chat-padding-bottom) + env(safe-area-inset-bottom))', // Keep chat above input + keyboard
+          paddingLeft: 'var(--chat-padding-horizontal)', // User-adjustable side padding
+          paddingRight: 'var(--chat-padding-horizontal)', // User-adjustable side padding
+          rowGap: 'var(--chat-row-gap)' // Compact/comfortable spacing
+        }}
       >
         {messages.map(msg => {
           const isCurrentUser =
@@ -107,7 +133,7 @@ const ChatView: React.FC<ChatViewProps> = ({
 >
   {msg.text}
 </div>
-                {/*  */}
+                {/* ---------------- */}
               </div>
 
               {/* Timestamp */}
@@ -138,12 +164,20 @@ const ChatView: React.FC<ChatViewProps> = ({
             </div>
           </div>
         )}
+
+        
       </div>
 
       {/* INPUT AREA */}
       <form
         onSubmit={handleSubmit}
-        className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-50/90 dark:bg-zinc-950/90 backdrop-blur border-t border-zinc-200 dark:border-zinc-900 p-4 pb-[calc(16px+env(safe-area-inset-bottom))]"
+        className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-50/90 dark:bg-zinc-950/90 backdrop-blur border-t border-zinc-200 dark:border-zinc-900"
+        style={{
+          paddingTop: '12px',
+          paddingBottom: 'calc(16px + var(--chat-padding-bottom) + env(safe-area-inset-bottom))', // User-adjustable bottom spacing
+          paddingLeft: 'var(--chat-padding-horizontal)', // User-adjustable side padding
+          paddingRight: 'var(--chat-padding-horizontal)' // User-adjustable side padding
+        }}
       >
         <div className="flex items-center bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-1.5">
           <input
@@ -155,14 +189,24 @@ const ChatView: React.FC<ChatViewProps> = ({
             className="flex-1 bg-transparent px-4 py-2 text-sm focus:outline-none text-zinc-900 dark:text-zinc-100 min-w-0"
           />
 
+
+          <button
+            onClick={onTogglePanic}
+            className="p-2 mr-2 rounded-lg border-2 border-zinc-200/70 dark:border-zinc-700/80 text-red-500 hover:bg-red-500/10"
+            aria-label="Panic Mode"
+          >
+            <Shield size={20} />
+          </button>
+          
           <button
             type="submit"
             onMouseDown={(e) => e.preventDefault()}
             disabled={!inputText.trim()}
-            className="bg-rose-600 disabled:opacity-50 text-white p-2 rounded-xl active:scale-95"
+            className="bg-rose-600 disabled:opacity-50 text-white p-2 mr-2 rounded-xl active:scale-95"
           >
             <Send size={18} />
           </button>
+          
         </div>
       </form>
     </div>

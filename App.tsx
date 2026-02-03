@@ -18,6 +18,12 @@ const App: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [theme, setTheme] = useState<Theme>('dark');
+  const [chatUiAdjust, setChatUiAdjust] = useState({
+    top: 12,
+    bottom: 16,
+    horizontal: 12,
+    density: 'comfortable' as 'compact' | 'comfortable'
+  });
   
   // ===== LOGIN STATE MANAGEMENT =====
   // User must log in first with time-based PIN
@@ -26,6 +32,25 @@ const App: React.FC = () => {
   
   // UI states
   const [userIsTyping, setUserIsTyping] = useState(false);
+
+  // ===== CHAT UI ADJUSTMENT (USER CONTROLLED) =====
+  useEffect(() => {
+    const raw = localStorage.getItem('chatUiAdjust');
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw);
+      setChatUiAdjust(prev => ({
+        ...prev,
+        ...parsed
+      }));
+    } catch {
+      // Ignore malformed stored data
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('chatUiAdjust', JSON.stringify(chatUiAdjust));
+  }, [chatUiAdjust]);
   
   // ===== REAL-TIME CHAT LISTENER =====
   // Subscribe to Firestore messages ONLY when logged in
@@ -146,7 +171,16 @@ const App: React.FC = () => {
 
   return (
     <div className={`${theme === 'dark' ? 'dark' : ''}`}>
-      <div className="flex h-screen w-screen overflow-hidden overflow-x-hidden max-w-[100vw] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-500">
+      <div
+        className="flex h-screen w-screen overflow-hidden overflow-x-hidden max-w-[100vw] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-500"
+        style={{
+          // CSS vars used by ChatView for padding adjustments
+          ['--chat-padding-top' as any]: `${chatUiAdjust.top}px`,
+          ['--chat-padding-bottom' as any]: `${chatUiAdjust.bottom}px`,
+          ['--chat-padding-horizontal' as any]: `${chatUiAdjust.horizontal}px`,
+          ['--chat-row-gap' as any]: chatUiAdjust.density === 'compact' ? '8px' : '16px'
+        }}
+      >
         {/* Main Content Area */}
         <div className={`flex flex-1 flex-col transition-all duration-300 ${showNotes ? 'md:mr-96' : ''}`}>
           <ChatView 
@@ -181,6 +215,8 @@ const App: React.FC = () => {
           onClose={() => setShowSettings(false)}
           theme={theme}
           onThemeChange={setTheme}
+          chatUiAdjust={chatUiAdjust}
+          onChatUiAdjustChange={setChatUiAdjust}
         />
 
         {/* Notes Section - Desktop Sidebar / Mobile Fullscreen Overlay */}
