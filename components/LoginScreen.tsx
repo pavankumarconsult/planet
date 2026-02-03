@@ -115,8 +115,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             <span className="text-4xl">{selectedUser === 'jupiter' ? '🪐' : '🔴'}</span>
           </div>
           <h2 className="text-2xl font-bold text-white capitalize">{selectedUser}</h2>
-          <p className="mt-2 text-sm text-white/70">Enter current time as PIN</p>
-          <p className="mt-1 text-xs text-white/50">Format: HHMM (e.g., 14:30 → 1430)</p>
         </div>
 
         {/* PIN Display - Masked dots */}
