@@ -169,8 +169,7 @@ const ChatView: React.FC<ChatViewProps> = ({
       </div>
 
       {/* INPUT AREA */}
-      <form
-        onSubmit={handleSubmit}
+      <div
         className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-50/90 dark:bg-zinc-950/90 backdrop-blur border-t border-zinc-200 dark:border-zinc-900"
         style={{
           paddingTop: '12px',
@@ -179,36 +178,43 @@ const ChatView: React.FC<ChatViewProps> = ({
           paddingRight: 'var(--chat-padding-horizontal)' // User-adjustable side padding
         }}
       >
-        <div className="flex items-center bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-1.5">
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputText}
-            onChange={handleInputChange}
-            placeholder="Whisper something..."
-            className="flex-1 bg-transparent px-4 py-2 text-sm focus:outline-none text-zinc-900 dark:text-zinc-100 min-w-0"
-          />
-
-
+        <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-1.5">
+          {/* PANIC BUTTON — OUTSIDE FORM */}
           <button
+            type="button"
             onClick={onTogglePanic}
-            className="p-2 mr-2 rounded-lg border-2 border-zinc-200/70 dark:border-zinc-700/80 text-red-500 hover:bg-red-500/10"
+            className="p-2 rounded-lg border-2 border-zinc-200/70 dark:border-zinc-700/80 text-red-500 hover:bg-red-500/10"
             aria-label="Panic Mode"
           >
             <Shield size={20} />
           </button>
-          
-          <button
-            type="submit"
-            onMouseDown={(e) => e.preventDefault()}
-            disabled={!inputText.trim()}
-            className="bg-rose-600 disabled:opacity-50 text-white p-2 mr-2 rounded-xl active:scale-95"
+
+          {/* FORM: INPUT + SEND ONLY */}
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-1 items-center"
           >
-            <Send size={18} />
-          </button>
-          
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputText}
+              onChange={handleInputChange}
+              placeholder="Whisper something..."
+              enterKeyHint="send"
+              className="flex-1 bg-transparent px-4 py-2 text-sm focus:outline-none text-zinc-900 dark:text-zinc-100 min-w-0"
+            />
+
+            <button
+              type="submit"
+              onMouseDown={(e) => e.preventDefault()}
+              className="p-2 rounded-xl bg-rose-600 text-white"
+              aria-label="Send message"
+            >
+              <Send size={18} />
+            </button>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
