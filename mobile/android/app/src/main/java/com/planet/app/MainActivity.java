@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
@@ -16,28 +17,27 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Let content draw edge-to-edge; we will only inset for the IME.
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
         WindowInsetsControllerCompat controller =
                 new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
         controller.setSystemBarsBehavior(
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         );
 
-        View rootView = getWindow().getDecorView();
+        View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
 
         ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
-
-            Insets systemBars =
-                    insets.getInsets(WindowInsetsCompat.Type.systemBars());
             Insets ime =
                     insets.getInsets(WindowInsetsCompat.Type.ime());
 
-            int bottomInset = Math.max(systemBars.bottom, ime.bottom);
-
+            // Apply only keyboard height so content doesn't get extra system bar padding.
             v.setPadding(
-                    systemBars.left,
-                    systemBars.top,
-                    systemBars.right,
-                    bottomInset
+                    0,
+                    0,
+                    0,
+                    ime.bottom
             );
 
             return insets;
