@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Planet</string>
+    <string name="app_name">Calculator</string>
     <string name="title_activity_main">Planet</string>
     <string name="package_name">com.planet.app</string>
     <string name="custom_url_scheme">com.planet.app</string>
